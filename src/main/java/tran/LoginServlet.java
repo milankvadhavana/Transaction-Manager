@@ -14,12 +14,9 @@ import java.sql.ResultSet;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String mobile = request.getParameter("mobile");
         String password = request.getParameter("password");
 
@@ -27,19 +24,18 @@ public class LoginServlet extends HttpServlet {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/TransactionDB", "root", "9016");
 
-            PreparedStatement ps = con.prepareStatement("SELECT name FROM user_credentials WHERE mobile = ? AND password = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT name, email FROM user_credentials WHERE mobile = ? AND password = ?");
             ps.setString(1, mobile);
             ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                // Login successful
                 HttpSession session = request.getSession();
                 session.setAttribute("mobile", mobile);
-                session.setAttribute("name", rs.getString("name")); // Store user's name in session
+                session.setAttribute("name", rs.getString("name"));
+                session.setAttribute("email", rs.getString("email")); // 💡 Important!
                 response.sendRedirect("dashboard.jsp");
             } else {
-                // Login failed
                 response.sendRedirect("login.html?error=Invalid mobile number or password");
             }
 
