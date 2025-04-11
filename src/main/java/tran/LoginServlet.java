@@ -33,8 +33,8 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("mobile", mobile);
                 session.setAttribute("name", rs.getString("name"));
-                session.setAttribute("email", rs.getString("email")); // 💡 Important!
-                response.sendRedirect("dashboard.jsp");
+                session.setAttribute("email", rs.getString("email")); // 💡 Save email for further use
+                response.sendRedirect("index.jsp");  // ✅ Redirect to index.jsp after successful login
             } else {
                 response.sendRedirect("login.html?error=Invalid mobile number or password");
             }
